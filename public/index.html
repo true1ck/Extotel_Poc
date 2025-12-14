@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exotel Masking Demo</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h3>📞 Exotel Masked Call</h3>
+
+  <input type="text" id="from" placeholder="From Number (+91...)">
+  <input type="text" id="to" placeholder="To Number (+91...)">
+
+  <button onclick="makeCall()">Call Now</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+async function makeCall() {
+  const from = document.getElementById("from").value;
+  const to = document.getElementById("to").value;
+  const result = document.getElementById("result");
+
+  result.innerText = "Calling...";
+
+  const response = await fetch("/call", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to })
+  });
+
+  const data = await response.json();
+
+  if (data.success) {
+    result.innerHTML = `✅ Call initiated<br>Call SID: ${data.callSid}`;
+  } else {
+    result.innerHTML = `❌ Failed to initiate call`;
+  }
+}
+</script>
+
+</body>
+</html>
